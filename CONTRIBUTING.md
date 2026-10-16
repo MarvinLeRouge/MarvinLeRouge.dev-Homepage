@@ -18,19 +18,24 @@ This is the source of a personal website. Bug reports and fixes (broken links, a
 git clone https://github.com/MarvinLeRouge/MarvinLeRouge.dev-Website.git
 cd MarvinLeRouge.dev-Website
 npm install      # also installs the Husky git hooks
+npx playwright install chromium   # browser for the end-to-end tests, once
 npm run dev
 ```
 
 ## Quality checks
 
-| Command                | Purpose                             |
-| ---------------------- | ----------------------------------- |
-| `npm run lint`         | ESLint (TypeScript and Astro rules) |
-| `npm run format:check` | Prettier                            |
-| `npm run check`        | Astro and TypeScript diagnostics    |
-| `npm run build`        | Static build into `dist/`           |
+| Command                | Purpose                                                                             |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| `npm run lint`         | ESLint (TypeScript and Astro rules)                                                 |
+| `npm run format:check` | Prettier                                                                            |
+| `npm run check`        | Astro and TypeScript diagnostics                                                    |
+| `npm run build`        | Static build into `dist/`                                                           |
+| `npm run test:cov`     | Vitest unit tests, 80% coverage gate on `src/scripts/`                              |
+| `npm run test:e2e`     | Playwright and axe (WCAG 2.2 A and AA) on the built site, run `npm run build` first |
 
 The pre-commit hook runs ESLint and Prettier on staged files, `astro check`, and a gitleaks scan of the staged changes. The post-commit hook regenerates `CHANGELOG.md` with git-cliff.
+
+The CI runs all of the above on every pull request, plus an internal link check of `dist/` (lychee) and `npm audit`. The `CI status` job aggregates the results and is the required check on `main`.
 
 ## Workflow
 
