@@ -21,6 +21,7 @@
 - [x] FEAT-001 - Ajouter le routage FR/EN, page d'accueil en français d'abord
 - [x] FEAT-002 - Ajouter l'identité, les liens et l'email protégé contre le spam
 - [x] FEAT-003 - Ajouter les balises meta, Open Graph, le sitemap et robots
+- [x] TEST-001 - Vérifier les règles d'écriture et les données d'identité par des tests unitaires
 
 ## Section 4 - Fiches projet
 

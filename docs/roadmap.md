@@ -21,6 +21,7 @@
 - [x] FEAT-001 - Add FR/EN routing, French homepage first
 - [x] FEAT-002 - Add identity, links and spam-protected email
 - [x] FEAT-003 - Add meta tags, Open Graph, sitemap and robots
+- [x] TEST-001 - Enforce writing rules and identity data with unit tests
 
 ## Section 4 - Project sheets
 
