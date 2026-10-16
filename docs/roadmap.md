@@ -19,7 +19,7 @@
 ## Section 3 - Homepage
 
 - [x] FEAT-001 - Add FR/EN routing, French homepage first
-- [ ] FEAT-002 - Add identity, links and spam-protected email
+- [x] FEAT-002 - Add identity, links and spam-protected email
 - [ ] FEAT-003 - Add meta tags, Open Graph, sitemap and robots
 
 ## Section 4 - Project sheets
@@ -41,3 +41,4 @@
 
 - [ ] FEAT-013 - Add case studies
 - [ ] FEAT-014 - Add the portfolio quality page and badge
+- [ ] FEAT-015 - Add the downloadable CV

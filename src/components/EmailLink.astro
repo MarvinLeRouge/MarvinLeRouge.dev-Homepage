@@ -1,0 +1,32 @@
+---
+import { ENCODED_EMAIL } from '../i18n/identity';
+import type { Locale } from '../i18n/locales';
+import { UI } from '../i18n/ui';
+import { decodeEmail, EMAIL_ATTRIBUTE, spellOutEmail } from '../scripts/email-reveal';
+// External file rather than a processed <script>, which Astro inlines when small (blocked by the CSP).
+// Same bundling as the language preference script, see BaseLayout.
+import emailRevealScript from '../scripts/email-reveal-entry.ts?worker&url';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = UI[locale].home;
+const address = decodeEmail(ENCODED_EMAIL);
+if (address === null) throw new Error('ENCODED_EMAIL is not a valid encoded address');
+---
+
+<p class="contact">
+  {t.emailPrefix}
+  <span class="email" {...{ [EMAIL_ATTRIBUTE]: ENCODED_EMAIL }}>
+    {spellOutEmail(address, t.emailWords)}
+  </span>
+</p>
+
+<script
+  is:inline
+  defer
+  src={emailRevealScript}
+  type={import.meta.env.DEV ? 'module' : undefined}
+></script>

@@ -159,6 +159,14 @@ h1 .rouge {
   color: #e03030;
 }
 
+.civil-name {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: #999;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
 .subtitle {
   display: flex;
   flex-wrap: wrap;
@@ -295,9 +303,33 @@ h1 .rouge {
     color 0.2s;
 }
 
-.links a:hover {
+.links a:hover,
+.contact a:hover {
   color: #fff;
   border-color: #fff;
+}
+
+.links a:focus-visible,
+.contact a:focus-visible {
+  outline: 2px solid #ffc800;
+  outline-offset: 3px;
+}
+
+.contact {
+  margin-top: 1.2rem;
+  font-size: 0.75rem;
+  color: #999;
+  letter-spacing: 0.1em;
+}
+
+.contact a {
+  color: #ffc800;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 200, 0, 0.3);
+  padding-bottom: 2px;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .blink,
