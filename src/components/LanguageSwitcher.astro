@@ -1,0 +1,30 @@
+---
+import { homePath, LOCALES, type Locale } from '../i18n/locales';
+import { UI } from '../i18n/ui';
+import { SWITCH_ATTRIBUTE } from '../scripts/language-preference';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<nav class="language-switcher" aria-label={UI[locale].languageSwitcherLabel}>
+  <ul>
+    {LOCALES.map((target) => (
+      <li>
+        <a
+          href={homePath(target)}
+          hreflang={target}
+          lang={target}
+          aria-current={target === locale ? 'page' : undefined}
+          {...{ [SWITCH_ATTRIBUTE]: target }}
+        >
+          {target.toUpperCase()}
+          <span class="visually-hidden">{UI[target].languageName}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

@@ -14,6 +14,10 @@ automatically from Conventional Commits history.
 - Add ci with tests, accessibility and link checks
 - Add build and deploy workflow with operations runbook
 
+### Features
+
+- Add french and english homepages with remembered language choice
+
 ### Miscellaneous
 
 - Gitignore

@@ -20,6 +20,7 @@
 The site complements the GitHub profile: GitHub shows the code, the site explains the reasoning behind it (design decisions, difficulties, case studies).
 
 - Fully static output: plain HTML and CSS, no client-side JavaScript beyond small progressive enhancements.
+- French first at the root, English under `/en/`. The language picked with the switcher is remembered in the browser (`localStorage`, no cookie).
 - No audience measurement.
 - Accessibility is a design constraint, not an afterthought.
 
@@ -75,15 +76,19 @@ PLAYWRIGHT_BASE_URL=http://website-prod.marvinlerouge.local npm run test:e2e   #
 
 ```
 src/
-  assets/    self-hosted fonts and their licenses
-  layouts/   page layouts (document head, shared structure)
-  pages/     one file per route
-  styles/    global stylesheets
+  assets/      self-hosted fonts and avatar, font licenses
+  components/  reusable page sections
+  i18n/        locales and every user-facing string (FR, EN)
+  layouts/     page layouts (document head, shared structure)
+  pages/       one file per route
+  scripts/     client scripts (language preference)
+  styles/      global stylesheets
 tests/
-  e2e/       Playwright and axe tests on the built site
-docker/      Nginx configuration of the production image
-docs/        roadmap, operations runbook and translated community files
-scripts/     git hook helpers and Docker smoke test
+  e2e/         Playwright and axe tests on the built site
+  unit/        Vitest tests for client scripts and locale logic
+docker/        Nginx configuration of the production image
+docs/          roadmap, operations runbook and translated community files
+scripts/       git hook helpers and Docker smoke test
 ```
 
 ---
