@@ -1,0 +1,43 @@
+🇫🇷 Version française | [🇬🇧 English version](roadmap.md)
+
+---
+
+# Feuille de route
+
+## Section 1 - Fondations
+
+- [x] CHORE-001 - Initialiser Astro et porter la page d'accueil actuelle avec un rendu identique
+- [ ] CHORE-002 - Ajouter l'outillage, la documentation et l'hygiène du dépôt
+- [ ] CI-001 - Ajouter le workflow de CI
+
+## Section 2 - Déploiement
+
+- [ ] CHORE-003 - Conteneuriser le site (Dockerfile, nginx, fichiers compose)
+- [ ] CI-002 - Ajouter le workflow Build & Deploy, le guide d'exploitation et la bascule du VPS
+- [ ] FIX-001 - Rediriger www.marvinlerouge.dev vers le domaine principal
+
+## Section 3 - Page d'accueil
+
+- [ ] FEAT-001 - Ajouter le routage FR/EN, page d'accueil en français d'abord
+- [ ] FEAT-002 - Ajouter l'identité, les liens et l'email protégé contre le spam
+- [ ] FEAT-003 - Ajouter les balises meta, Open Graph, le sitemap et robots
+
+## Section 4 - Fiches projet
+
+- [ ] FEAT-004 - Ajouter la collection de contenu des fiches projet
+- [ ] FEAT-005 - Ajouter le gabarit de fiche et le sélecteur de vue recruteur / lead dev
+- [ ] FEAT-006 - Ajouter l'index des projets et le lien depuis l'accueil
+
+## Section 5 - Contenu des fiches projet
+
+- [ ] FEAT-007 - Rédiger la fiche pilote JobFlow
+- [ ] FEAT-008 - Rédiger la fiche Engineering-Radar
+- [ ] FEAT-009 - Rédiger la fiche GeoChallenge-Tracker
+- [ ] FEAT-010 - Rédiger la fiche Summit-Stats
+- [ ] FEAT-011 - Rédiger la fiche Triton
+- [ ] FEAT-012 - Rédiger la fiche HexaRot
+
+## Section 6 - Décisions en attente
+
+- [ ] FEAT-013 - Ajouter les études de cas
+- [ ] FEAT-014 - Ajouter la page qualité du portfolio et le badge
