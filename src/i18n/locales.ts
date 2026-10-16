@@ -5,6 +5,9 @@ export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = 'fr';
 
+/** Open Graph locale code (language and territory) per locale. */
+export const OG_LOCALES: Readonly<Record<Locale, string>> = { fr: 'fr_FR', en: 'en_US' };
+
 /** Type guard for values read from untrusted sources (storage, URLs). */
 export function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (LOCALES as readonly string[]).includes(value);

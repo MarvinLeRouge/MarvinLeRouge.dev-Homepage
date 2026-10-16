@@ -1,4 +1,5 @@
 // @ts-check
+import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
@@ -9,6 +10,13 @@ export default defineConfig({
     locales: ['fr', 'en'],
     routing: { prefixDefaultLocale: false },
   },
+  integrations: [
+    sitemap({
+      // Alternates per locale, matching the hreflang links of the pages.
+      i18n: { defaultLocale: 'fr', locales: { fr: 'fr', en: 'en' } },
+      filter: (page) => !page.endsWith('/404/'),
+    }),
+  ],
   // Whitespace compression collapses meaningful spaces between inline elements.
   compressHTML: false,
   vite: {

@@ -20,7 +20,7 @@
 
 - [x] FEAT-001 - Add FR/EN routing, French homepage first
 - [x] FEAT-002 - Add identity, links and spam-protected email
-- [ ] FEAT-003 - Add meta tags, Open Graph, sitemap and robots
+- [x] FEAT-003 - Add meta tags, Open Graph, sitemap and robots
 
 ## Section 4 - Project sheets
 

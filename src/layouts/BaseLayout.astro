@@ -1,7 +1,9 @@
 ---
 import bebasNeueLatin from '../assets/fonts/bebas-neue-latin.woff2?url';
 import shareTechMonoLatin from '../assets/fonts/share-tech-mono-latin.woff2?url';
-import { DEFAULT_LOCALE, type Locale } from '../i18n/locales';
+import { SITE_NAME } from '../i18n/identity';
+import { DEFAULT_LOCALE, LOCALES, OG_LOCALES, type Locale } from '../i18n/locales';
+import type { PageMeta } from '../i18n/ui';
 // Bundled as a standalone classic script (no imports left), so it can block rendering in the head:
 // a stored language preference redirects before the first paint, without inline code (CSP).
 // The dev server serves it as an ES module instead, hence the module type in dev only.
@@ -14,10 +16,16 @@ interface Props {
   locale: Locale;
   /** Path of this page in every locale, when it is translated. Emits hreflang alternates. */
   translations?: Readonly<Record<Locale, string>>;
+  /**
+   * Search and link preview metadata, with the preview image (1200 x 630, path from the site root).
+   * Pages without it (the 404 page) are kept out of search results.
+   */
+  meta?: Omit<PageMeta, 'title'> & { image: string };
 }
 
-const { title, locale, translations } = Astro.props;
+const { title, locale, translations, meta } = Astro.props;
 const absolute = (path: string) => new URL(path, Astro.site).href;
+const canonical = absolute(Astro.url.pathname);
 ---
 
 <!doctype html>
@@ -31,6 +39,30 @@ const absolute = (path: string) => new URL(path, Astro.site).href;
       type={import.meta.env.DEV ? 'module' : undefined}
     ></script>
     <title>{title}</title>
+    {meta ? (
+      <>
+        <meta name="description" content={meta.description} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={SITE_NAME} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={meta.description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:locale" content={OG_LOCALES[locale]} />
+        {LOCALES.filter((other) => other !== locale).map((other) => (
+          <meta property="og:locale:alternate" content={OG_LOCALES[other]} />
+        ))}
+        <meta property="og:image" content={absolute(meta.image)} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={meta.imageAlt} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </>
+    ) : (
+      <meta name="robots" content="noindex" />
+    )}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preload" href={bebasNeueLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={shareTechMonoLatin} as="font" type="font/woff2" crossorigin />
     {translations && (
@@ -41,6 +73,7 @@ const absolute = (path: string) => new URL(path, Astro.site).href;
         <link rel="alternate" hreflang="x-default" href={absolute(translations[DEFAULT_LOCALE])} />
       </>
     )}
+    <slot name="head" />
   </head>
   <body>
     <slot />

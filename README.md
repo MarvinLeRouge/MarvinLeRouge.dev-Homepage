@@ -56,6 +56,7 @@ npm run format:check # Prettier
 npm test             # unit tests (Vitest)
 npm run test:cov     # unit tests with the coverage gate
 npm run test:e2e     # end-to-end and accessibility tests on the built site
+npm run social-images # regenerate the link preview images and the Apple touch icon
 ```
 
 ### Docker
@@ -87,9 +88,10 @@ src/
 tests/
   e2e/         Playwright and axe tests on the built site
   unit/        Vitest tests for client scripts and locale logic
+public/        files served as is (favicon, link preview images)
 docker/        Nginx configuration of the production image
 docs/          roadmap, operations runbook and translated community files
-scripts/       git hook helpers and Docker smoke test
+scripts/       git hook helpers, Docker smoke test and social image generator
 ```
 
 ---

@@ -1,9 +1,19 @@
 ---
 import Home from '../../components/Home.astro';
+import PersonData from '../../components/PersonData.astro';
 import { HOME_PATHS } from '../../i18n/locales';
+import { UI } from '../../i18n/ui';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const { title, ...meta } = UI.en.homeMeta;
 ---
 
-<BaseLayout title="MarvinLeRouge.dev" locale="en" translations={HOME_PATHS}>
+<BaseLayout
+  title={title}
+  locale="en"
+  translations={HOME_PATHS}
+  meta={{ ...meta, image: '/og/home-en.png' }}
+>
+  <PersonData slot="head" locale="en" />
   <Home locale="en" />
 </BaseLayout>

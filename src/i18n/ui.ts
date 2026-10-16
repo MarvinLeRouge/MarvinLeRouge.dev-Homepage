@@ -26,11 +26,20 @@ interface HomeStrings {
   readonly footerDeadCodeAfter: string;
 }
 
+/** Document metadata, for search engines and link previews. */
+export interface PageMeta {
+  readonly title: string;
+  readonly description: string;
+  /** Text alternative of the link preview image. */
+  readonly imageAlt: string;
+}
+
 interface UiStrings {
   /** Accessible name of the language switcher. */
   readonly languageSwitcherLabel: string;
   /** Native name of the language, shown to visitors switching to it. */
   readonly languageName: string;
+  readonly homeMeta: PageMeta;
   readonly home: HomeStrings;
 }
 
@@ -39,6 +48,12 @@ export const UI: Readonly<Record<Locale, UiStrings>> = {
   fr: {
     languageSwitcherLabel: 'Langue',
     languageName: 'Français',
+    homeMeta: {
+      title: 'Jean Ceugniet, développeur backend / Data Engineer',
+      description:
+        '15+ ans de backend, et un faible pour les traitements trop lents et les données en désordre. Pipelines de données fiables, Python, SQL. Toulon / Remote.',
+      imageAlt: 'MarvinLeRouge, Jean Ceugniet, développeur backend / Data Engineer',
+    },
     home: {
       warningTape: 'PERSONNEL AUTORISÉ UNIQUEMENT',
       jobTitle: 'Développeur backend / Data Engineer',
@@ -85,6 +100,12 @@ export const UI: Readonly<Record<Locale, UiStrings>> = {
   en: {
     languageSwitcherLabel: 'Language',
     languageName: 'English',
+    homeMeta: {
+      title: 'Jean Ceugniet, Backend Developer / Data Engineer',
+      description:
+        '15+ years of backend development, and a soft spot for slow processes and messy data. Reliable data pipelines, Python, SQL. Toulon / Remote.',
+      imageAlt: 'MarvinLeRouge, Jean Ceugniet, Backend Developer / Data Engineer',
+    },
     home: {
       warningTape: 'AUTHORIZED PERSONNEL ONLY',
       jobTitle: 'Backend Developer / Data Engineer',
