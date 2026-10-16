@@ -7,7 +7,7 @@
 ## Section 1 - Fondations
 
 - [x] CHORE-001 - Initialiser Astro et porter la page d'accueil actuelle avec un rendu identique
-- [ ] CHORE-002 - Ajouter l'outillage, la documentation et l'hygiène du dépôt
+- [x] CHORE-002 - Ajouter l'outillage, la documentation et l'hygiène du dépôt
 - [ ] CI-001 - Ajouter le workflow de CI
 
 ## Section 2 - Déploiement

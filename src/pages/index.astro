@@ -10,7 +10,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="corner bl"></div>
       <div class="corner br"></div>
 
-      <div class="warning-tape"><span class="warning-sign">⚠</span> &nbsp; AUTHORIZED PERSONNEL ONLY &nbsp; <span class="warning-sign">⚠</span></div>
+      <div class="warning-tape">
+        <span class="warning-sign">⚠</span> &nbsp; AUTHORIZED PERSONNEL ONLY &nbsp;{' '}
+        <span class="warning-sign">⚠</span>
+      </div>
 
       <span class="biohazard-icon">☣</span>
 
@@ -19,7 +22,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <span class="avatar-placeholder">?</span>
         </div>
         <h1>
-          <span class="marvin">Marvin</span>&#8203;<span class="le">Le</span>&#8203;<span class="rouge">Rouge</span>
+          <span class="marvin">Marvin</span>&#8203;<span class="le">Le</span>&#8203;
+          <span class="rouge">Rouge</span>
         </h1>
       </div>
 
@@ -30,17 +34,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <div class="warning-box">
         <span class="label">// WARNING</span>
-        You have entered a <em>live development environment</em>.<br>
+        You have entered a <em>live development environment</em>.<br />
         Side effects may include: <em>working&nbsp;software</em>, <em>clean&nbsp;architecture</em>,
-        <em>automated&nbsp;tests</em>, and an unhealthy obsession with <em>code&nbsp;quality</em>.<br>
+        <em>automated&nbsp;tests</em>, and an unhealthy obsession with <em>code&nbsp;quality</em>.
+        <br />
         Proceed at your own risk<span class="blink">_</span>
       </div>
 
       <div class="links">
-        <a href="https://github.com/MarvinLeRouge" target="_blank">→ GitHub</a>
+        <a href="https://github.com/MarvinLeRouge" target="_blank">
+          → GitHub
+        </a>
       </div>
 
-      <p class="footer">marvinlerouge.dev &nbsp;·&nbsp; no humans were harmed in the making of this page &nbsp;.&nbsp; no <del>remains</del> dead code found.</p>
+      <p class="footer">
+        marvinlerouge.dev &nbsp;·&nbsp; no humans were harmed in the making of this page
+        &nbsp;.&nbsp; no <del>remains</del> dead code found.
+      </p>
     </div>
   </div>
 </BaseLayout>
