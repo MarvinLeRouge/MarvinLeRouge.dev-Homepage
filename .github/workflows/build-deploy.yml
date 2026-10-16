@@ -177,19 +177,29 @@ jobs:
           SHA: ${{ needs.resolve.outputs.sha }}
         run: |
           site=https://marvinlerouge.dev
+
           for attempt in $(seq 1 12); do
             served="$(curl -fsS --max-time 10 "$site/version.txt" || true)"
-            if [ "$served" = "$SHA" ]; then
-              home="$(curl -sS --max-time 10 -o /dev/null -D - -w 'status=%{http_code}\n' "$site/")"
-              grep -q '^status=200$' <<<"$home" || { echo "Homepage did not answer 200" >&2; exit 1; }
-              grep -qi '^content-security-policy:' <<<"$home" || { echo "Homepage has no CSP header" >&2; exit 1; }
-              not_found="$(curl -sS --max-time 10 -o /dev/null -w '%{http_code}' "$site/deploy-check-missing-page/")"
-              [ "$not_found" = 404 ] || { echo "Unknown path answered $not_found, expected 404" >&2; exit 1; }
-              echo "Production serves $SHA (attempt $attempt)"
-              exit 0
-            fi
+            [ "$served" = "$SHA" ] && break
             echo "Attempt $attempt: serving '${served:-nothing}', expected $SHA, retrying"
             sleep 5
           done
-          echo "Production did not serve $SHA in time" >&2
-          exit 1
+          [ "$served" = "$SHA" ] || { echo "Production did not serve $SHA in time" >&2; exit 1; }
+          echo "Production serves $SHA"
+
+          home="$(curl -sS --max-time 10 -o /dev/null -D - -w 'status=%{http_code}\n' "$site/")"
+          grep -q '^status=200$' <<<"$home" || { echo "Homepage did not answer 200" >&2; exit 1; }
+          grep -qi '^content-security-policy:' <<<"$home" || { echo "Homepage has no CSP header" >&2; exit 1; }
+          not_found="$(curl -sS --max-time 10 -o /dev/null -w '%{http_code}' "$site/deploy-check-missing-page/")"
+          [ "$not_found" = 404 ] || { echo "Unknown path answered $not_found, expected 404" >&2; exit 1; }
+
+          # Retried: on a new host the www certificate may still be being issued
+          expected_www="301 $site/deploy-check/?q=1"
+          for attempt in $(seq 1 12); do
+            www="$(curl -sS --max-time 10 -o /dev/null -w '%{http_code} %{redirect_url}' "https://www.marvinlerouge.dev/deploy-check/?q=1" || true)"
+            [ "$www" = "$expected_www" ] && break
+            echo "Attempt $attempt: www answered '${www:-nothing}', expected '$expected_www', retrying"
+            sleep 5
+          done
+          [ "$www" = "$expected_www" ] || { echo "www did not redirect to the apex in time" >&2; exit 1; }
+          echo "www redirects to the apex"

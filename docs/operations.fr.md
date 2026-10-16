@@ -18,23 +18,29 @@ pull request ──> CI ──> merge sur main ──> CI sur main ──> Build
 - Image : `ghcr.io/marvinlerouge/marvinlerouge.dev-website`, taguée `latest` et avec le SHA complet du commit.
 - Le VPS exécute toujours une image figée sur un SHA de commit, jamais `latest`. Chaque image sert son SHA de commit à l'adresse `/version.txt`.
 - Stack de production : `docker-compose.prod.yml`, projet compose `website`, dans `/home/mlr/marvinlerouge.dev/website/compose` sur le VPS.
-- Routage : le Traefik partagé du VPS (réseau `traefik-public`, entrypoint `websecure`, résolveur de certificats `letsencrypt`).
+- Routage : le Traefik partagé du VPS (réseau `traefik-public`, entrypoint `websecure`, résolveur de certificats `letsencrypt`), derrière le proxy Cloudflare.
+- `www.marvinlerouge.dev` (couvert par l'enregistrement DNS `*.marvinlerouge.dev`) redirige de façon permanente (301) vers `https://marvinlerouge.dev`, chemin et paramètres conservés : routeur `website-www`, middleware `website-www-redirect`.
 
 ## Secrets
 
 Secrets du dépôt (Settings, Secrets and variables, Actions) :
 
-| Secret                   | Valeur                                                                                    |
-| ------------------------ | ----------------------------------------------------------------------------------------- |
-| `DEPLOY_SSH_HOST`        | Nom d'hôte ou IP du VPS, même valeur que dans les autres dépôts du portfolio              |
-| `DEPLOY_SSH_USER`        | Utilisateur SSH sur le VPS, même valeur que dans les autres dépôts du portfolio           |
-| `DEPLOY_SSH_PRIVATE_KEY` | Clé privée de déploiement ; sa clé publique est autorisée sur le VPS pour cet utilisateur |
+| Secret                   | Valeur                                                                                          |
+| ------------------------ | ----------------------------------------------------------------------------------------------- |
+| `DEPLOY_SSH_HOST`        | Nom d'hôte ou IP du VPS, même valeur que dans les autres dépôts du portfolio                    |
+| `DEPLOY_SSH_USER`        | Utilisateur SSH sur le VPS, même valeur que dans les autres dépôts du portfolio                 |
+| `DEPLOY_SSH_PRIVATE_KEY` | Clé privée propre à ce dépôt (`~/.ssh/id_ed25519_website_deploy`, commentaire `website-deploy`) |
 
-La clé privée peut être enregistrée sans être affichée :
+Chaque projet du portfolio se déploie avec sa propre clé, autorisée dans `~/.ssh/authorized_keys` sur le VPS : une clé peut être révoquée sans toucher aux autres projets. Pour créer ou remplacer la clé de ce dépôt :
 
 ```bash
-gh secret set DEPLOY_SSH_PRIVATE_KEY --repo MarvinLeRouge/MarvinLeRouge.dev-Website < ~/.ssh/id_ed25519_github_actions_deploy
+ssh-keygen -t ed25519 -N '' -C website-deploy -f ~/.ssh/id_ed25519_website_deploy
+ssh-copy-id -i ~/.ssh/id_ed25519_website_deploy.pub <utilisateur-vps>@<hôte-vps>    # ajoute, n'écrase rien
+ssh -i ~/.ssh/id_ed25519_website_deploy -o IdentitiesOnly=yes -o BatchMode=yes <utilisateur-vps>@<hôte-vps> 'echo ok'
+gh secret set DEPLOY_SSH_PRIVATE_KEY --repo MarvinLeRouge/MarvinLeRouge.dev-Website < ~/.ssh/id_ed25519_website_deploy
 ```
+
+La dernière commande lit la clé depuis le fichier et ne l'affiche jamais.
 
 Le push et le pull de l'image utilisent le `GITHUB_TOKEN` du workflow : aucun secret de registre n'est nécessaire.
 
@@ -50,7 +56,7 @@ Garde-fous :
 
 Pour redéployer à la main la version actuelle de `main` : Actions, `Build & Deploy`, Run workflow, branche `main`, `rollback_sha` vide. Les lancements manuels depuis une autre branche sont refusés, retours arrière compris.
 
-Chaque exécution se termine par le job `Verify production` : `https://marvinlerouge.dev/version.txt` doit renvoyer le SHA déployé, la page d'accueil doit répondre 200 avec l'en-tête `Content-Security-Policy`, et un chemin inconnu doit répondre 404.
+Chaque exécution se termine par le job `Verify production` : `https://marvinlerouge.dev/version.txt` doit renvoyer le SHA déployé, la page d'accueil doit répondre 200 avec l'en-tête `Content-Security-Policy`, un chemin inconnu doit répondre 404, et `www` doit répondre par une 301 vers le domaine principal, chemin conservé.
 
 ## Revenir en arrière
 
@@ -114,5 +120,7 @@ docker logs traefik 2>&1 | grep -i website          # erreurs de routage et de c
 curl -sI https://marvinlerouge.dev/                 # code et en-têtes vus de l'extérieur
 ```
 
+- `Verify production` échoue sur `www` : chercher le routeur `website-www` et son certificat dans `docker logs traefik`.
 - `Verify production` lit un autre SHA, ou aucun, à `/version.txt` : Traefik envoie encore le trafic vers un autre conteneur. Vérifier que le conteneur `website` est en bonne santé (Traefik ignore les conteneurs dont le healthcheck démarre encore ou échoue) et que le routeur porte bien son label de priorité.
+- Le déploiement échoue avec `ssh: unable to authenticate` : la clé de `DEPLOY_SSH_PRIVATE_KEY` n'est pas autorisée sur le VPS. Lancer le test `ssh -i ... 'echo ok'` ci-dessus, puis `ssh-copy-id` si besoin.
 - `docker compose pull` échoue avec `denied` : le package est privé et la connexion a échoué, ou le tag d'image n'existe pas (`rollback_sha` erroné).

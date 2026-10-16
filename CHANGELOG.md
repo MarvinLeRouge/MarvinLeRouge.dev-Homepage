@@ -7,6 +7,7 @@ automatically from Conventional Commits history.
 ### Bug Fixes
 
 - Add node types for the playwright config type check
+- Redirect www to the apex domain
 
 ### CI/CD
 

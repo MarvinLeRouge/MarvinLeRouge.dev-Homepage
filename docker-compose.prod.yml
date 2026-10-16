@@ -19,6 +19,17 @@ services:
       - 'traefik.http.routers.website.tls=true'
       - 'traefik.http.routers.website.tls.certresolver=letsencrypt'
       - 'traefik.http.services.website.loadbalancer.server.port=80'
+      # www (covered by the *.marvinlerouge.dev DNS record) redirects permanently to the apex, path kept.
+      # $$ escapes $ for compose variable interpolation.
+      - 'traefik.http.routers.website-www.rule=Host(`www.marvinlerouge.dev`)'
+      - 'traefik.http.routers.website-www.entrypoints=websecure'
+      - 'traefik.http.routers.website-www.tls=true'
+      - 'traefik.http.routers.website-www.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.website-www.middlewares=website-www-redirect'
+      - 'traefik.http.routers.website-www.service=website'
+      - 'traefik.http.middlewares.website-www-redirect.redirectregex.regex=^https?://www\.marvinlerouge\.dev/(.*)'
+      - 'traefik.http.middlewares.website-www-redirect.redirectregex.replacement=https://marvinlerouge.dev/$${1}'
+      - 'traefik.http.middlewares.website-www-redirect.redirectregex.permanent=true'
     networks:
       - traefik-public
 
