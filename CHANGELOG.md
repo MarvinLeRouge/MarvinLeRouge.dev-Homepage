@@ -11,6 +11,7 @@ automatically from Conventional Commits history.
 ### CI/CD
 
 - Add ci with tests, accessibility and link checks
+- Add build and deploy workflow with operations runbook
 
 ### Miscellaneous
 
