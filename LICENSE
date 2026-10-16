@@ -5,7 +5,8 @@ Copyright (c) 2026 Jean Ceugniet
 Scope: this license applies to the source code of this repository (configuration,
 layouts, components, styles and scripts). It does not apply to the site content:
 texts, project sheets, case studies, screenshots and other images are
-Copyright (c) 2026 Jean Ceugniet, all rights reserved.
+Copyright (c) 2026 Jean Ceugniet, all rights reserved. The fonts in src/assets/fonts/
+are third-party works under the SIL Open Font License 1.1 (license files alongside).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

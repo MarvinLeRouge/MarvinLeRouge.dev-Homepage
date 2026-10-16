@@ -1,0 +1,15 @@
+.git
+.github
+.husky
+node_modules
+dist
+.astro
+coverage
+playwright-report
+test-results
+docs
+.env
+.env.*
+.serena
+Dockerfile
+docker-compose*.yml

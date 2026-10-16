@@ -26,14 +26,15 @@ Le site complète le profil GitHub : GitHub montre le code, le site explique la 
 
 ## Stack technique
 
-| Couche     | Technologie                                                                                                     |
-| ---------- | --------------------------------------------------------------------------------------------------------------- |
-| Générateur | ![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white&style=flat-square)                |
-| Langage    | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square) |
-| Lint       | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square)             |
-| Formatage  | ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square)       |
-| Tests      | Vitest, Playwright, axe-core, lychee                                                                            |
-| Hooks git  | Husky, lint-staged, gitleaks, git-cliff                                                                         |
+| Couche     | Technologie                                                                                                                                                                                          |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Générateur | ![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white&style=flat-square)                                                                                                     |
+| Langage    | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square)                                                                                      |
+| Lint       | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square)                                                                                                  |
+| Formatage  | ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square)                                                                                            |
+| Service    | ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=flat-square) ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white&style=flat-square) |
+| Tests      | Vitest, Playwright, axe-core, lychee                                                                                                                                                                 |
+| Hooks git  | Husky, lint-staged, gitleaks, git-cliff                                                                                                                                                              |
 
 ---
 
@@ -54,19 +55,34 @@ npm run test:cov     # tests unitaires avec la barrière de couverture
 npm run test:e2e     # tests de bout en bout et d'accessibilité sur le site construit
 ```
 
+### Docker
+
+Les deux services passent par le Traefik local (réseau externe `traefik-public`). Ajouter `website.marvinlerouge.local` et `website-prod.marvinlerouge.local` à `/etc/hosts`.
+
+```bash
+docker compose up --build                 # serveur de dev avec rechargement à chaud sur http://website.marvinlerouge.local
+docker compose --profile prod up --build  # image de production (Nginx) sur http://website-prod.marvinlerouge.local
+scripts/smoke-docker.sh http://website-prod.marvinlerouge.local   # codes HTTP, en-têtes, cache
+PLAYWRIGHT_BASE_URL=http://website-prod.marvinlerouge.local npm run test:e2e   # tests e2e avec la vraie CSP
+```
+
+`docker-compose.prod.yml` décrit la stack de production, déployée sur le serveur par la CI.
+
 ---
 
 ## Structure du projet
 
 ```
 src/
+  assets/    polices auto-hébergées et leurs licences
   layouts/   gabarits de page (en-tête du document, structure commune)
   pages/     un fichier par route
   styles/    feuilles de style globales
 tests/
   e2e/       tests Playwright et axe sur le site construit
+docker/      configuration Nginx de l'image de production
 docs/        feuille de route et fichiers communautaires traduits
-scripts/     utilitaires des hooks git
+scripts/     utilitaires des hooks git et test de fumée Docker
 ```
 
 ---
@@ -79,4 +95,4 @@ Voir [docs/roadmap.fr.md](docs/roadmap.fr.md).
 
 ## Licence
 
-Le code source est publié sous [licence MIT](LICENSE). Le contenu du site (textes, fiches projet, études de cas, captures et images) n'est pas couvert par cette licence : tous droits réservés.
+Le code source est publié sous [licence MIT](LICENSE). Le contenu du site (textes, fiches projet, études de cas, captures et images) n'est pas couvert par cette licence : tous droits réservés. Les polices de `src/assets/fonts/` (Bebas Neue, Share Tech Mono) sont distribuées sous SIL Open Font License 1.1, voir les fichiers de licence placés à côté.

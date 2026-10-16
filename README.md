@@ -26,14 +26,15 @@ The site complements the GitHub profile: GitHub shows the code, the site explain
 
 ## Tech stack
 
-| Layer      | Technology                                                                                                      |
-| ---------- | --------------------------------------------------------------------------------------------------------------- |
-| Generator  | ![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white&style=flat-square)                |
-| Language   | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square) |
-| Linting    | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square)             |
-| Formatting | ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square)       |
-| Tests      | Vitest, Playwright, axe-core, lychee                                                                            |
-| Git hooks  | Husky, lint-staged, gitleaks, git-cliff                                                                         |
+| Layer      | Technology                                                                                                                                                                                           |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generator  | ![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white&style=flat-square)                                                                                                     |
+| Language   | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square)                                                                                      |
+| Linting    | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square)                                                                                                  |
+| Formatting | ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square)                                                                                            |
+| Serving    | ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=flat-square) ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white&style=flat-square) |
+| Tests      | Vitest, Playwright, axe-core, lychee                                                                                                                                                                 |
+| Git hooks  | Husky, lint-staged, gitleaks, git-cliff                                                                                                                                                              |
 
 ---
 
@@ -54,19 +55,34 @@ npm run test:cov     # unit tests with the coverage gate
 npm run test:e2e     # end-to-end and accessibility tests on the built site
 ```
 
+### Docker
+
+Both services run behind the local Traefik (external network `traefik-public`). Add `website.marvinlerouge.local` and `website-prod.marvinlerouge.local` to `/etc/hosts`.
+
+```bash
+docker compose up --build                 # dev server with hot reload on http://website.marvinlerouge.local
+docker compose --profile prod up --build  # production image (Nginx) on http://website-prod.marvinlerouge.local
+scripts/smoke-docker.sh http://website-prod.marvinlerouge.local   # status codes, headers, caching
+PLAYWRIGHT_BASE_URL=http://website-prod.marvinlerouge.local npm run test:e2e   # e2e tests against the real CSP
+```
+
+`docker-compose.prod.yml` is the production stack, deployed on the server by the CI.
+
 ---
 
 ## Project structure
 
 ```
 src/
+  assets/    self-hosted fonts and their licenses
   layouts/   page layouts (document head, shared structure)
   pages/     one file per route
   styles/    global stylesheets
 tests/
   e2e/       Playwright and axe tests on the built site
+docker/      Nginx configuration of the production image
 docs/        roadmap and translated community files
-scripts/     git hook helpers
+scripts/     git hook helpers and Docker smoke test
 ```
 
 ---
@@ -79,4 +95,4 @@ See [docs/roadmap.md](docs/roadmap.md).
 
 ## License
 
-The source code is released under the [MIT License](LICENSE). The site content (texts, project sheets, case studies, screenshots and images) is not covered by it: all rights reserved.
+The source code is released under the [MIT License](LICENSE). The site content (texts, project sheets, case studies, screenshots and images) is not covered by it: all rights reserved. The fonts in `src/assets/fonts/` (Bebas Neue, Share Tech Mono) are distributed under the SIL Open Font License 1.1, see the license files next to them.
