@@ -7,6 +7,7 @@
 > _Sources de [marvinlerouge.dev](https://marvinlerouge.dev) : site personnel d'un développeur backend / data engineer, avec des fiches projet bilingues proposant une vue recruteur et une vue technique. Site statique construit avec Astro._
 
 [![CI](https://github.com/MarvinLeRouge/MarvinLeRouge.dev-Website/actions/workflows/ci.yml/badge.svg)](https://github.com/MarvinLeRouge/MarvinLeRouge.dev-Website/actions/workflows/ci.yml)
+[![Deploy](https://github.com/MarvinLeRouge/MarvinLeRouge.dev-Website/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/MarvinLeRouge/MarvinLeRouge.dev-Website/actions/workflows/build-deploy.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/MarvinLeRouge/MarvinLeRouge.dev-Website/main?flag=frontend&label=coverage&logo=codecov)](https://app.codecov.io/gh/MarvinLeRouge/MarvinLeRouge.dev-Website)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -66,7 +67,7 @@ scripts/smoke-docker.sh http://website-prod.marvinlerouge.local   # codes HTTP, 
 PLAYWRIGHT_BASE_URL=http://website-prod.marvinlerouge.local npm run test:e2e   # tests e2e avec la vraie CSP
 ```
 
-`docker-compose.prod.yml` décrit la stack de production, déployée sur le serveur par la CI.
+`docker-compose.prod.yml` décrit la stack de production, déployée sur le serveur par le workflow `Build & Deploy` après chaque merge sur `main`. Déploiement, retour arrière et diagnostic : [docs/operations.fr.md](docs/operations.fr.md).
 
 ---
 
@@ -81,7 +82,7 @@ src/
 tests/
   e2e/       tests Playwright et axe sur le site construit
 docker/      configuration Nginx de l'image de production
-docs/        feuille de route et fichiers communautaires traduits
+docs/        feuille de route, guide d'exploitation et fichiers communautaires traduits
 scripts/     utilitaires des hooks git et test de fumée Docker
 ```
 

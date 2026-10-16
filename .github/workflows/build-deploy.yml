@@ -1,0 +1,195 @@
+name: Build & Deploy
+
+on:
+  # Deploys main once CI has passed on it
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+    branches: [main]
+  # Manual run: redeploys main, or rolls back to an image already in GHCR
+  workflow_dispatch:
+    inputs:
+      rollback_sha:
+        description: 'Full commit SHA of an already published image to redeploy (leave empty to build and deploy main)'
+        required: false
+        default: ''
+
+# Never cancel a deployment halfway through
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    name: Resolve release
+    # Only CI runs of pushes to this repository's main: a fork PR from its own "main" branch must never deploy
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.release.outputs.deploy }}
+      sha: ${{ steps.release.outputs.sha }}
+      image: ${{ steps.release.outputs.image }}
+      rollback: ${{ steps.release.outputs.rollback }}
+    steps:
+      - name: Resolve SHA and image name
+        id: release
+        env:
+          ROLLBACK_SHA: ${{ inputs.rollback_sha }}
+          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+          DISPATCH_SHA: ${{ github.sha }}
+          DISPATCH_REF: ${{ github.ref }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ "$DISPATCH_REF" != refs/heads/main ]; then
+            echo "Deploys run from main only (got $DISPATCH_REF)" >&2
+            exit 1
+          fi
+          deploy=true
+          if [ -n "$ROLLBACK_SHA" ]; then
+            # Bash regex anchors match the whole value, newlines included
+            if [[ ! "$ROLLBACK_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "rollback_sha must be a full 40-character lowercase commit SHA" >&2
+              exit 1
+            fi
+            sha="$ROLLBACK_SHA"
+            rollback=true
+          elif [ -n "$RUN_SHA" ]; then
+            sha="$RUN_SHA"
+            rollback=false
+            # workflow_run order is not guaranteed: never deploy a commit that is no longer the head of main
+            main_sha="$(git ls-remote "https://github.com/$REPOSITORY.git" refs/heads/main | cut -f1)"
+            if [ "$sha" != "$main_sha" ]; then
+              echo "::notice::Skipping deploy of $sha: main has moved on to $main_sha, its own run deploys it"
+              deploy=false
+            fi
+          else
+            sha="$DISPATCH_SHA"
+            rollback=false
+          fi
+          {
+            echo "deploy=$deploy"
+            echo "sha=$sha"
+            echo "rollback=$rollback"
+            echo "image=ghcr.io/$(printf '%s' "$REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          } >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build and push image
+    needs: resolve
+    if: needs.resolve.outputs.deploy == 'true' && needs.resolve.outputs.rollback == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.resolve.outputs.sha }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: production
+          push: true
+          build-args: |
+            RELEASE_SHA=${{ needs.resolve.outputs.sha }}
+          tags: |
+            ${{ needs.resolve.outputs.image }}:latest
+            ${{ needs.resolve.outputs.image }}:${{ needs.resolve.outputs.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to VPS
+    needs: [resolve, build]
+    # Runs after a successful build, or directly on rollback (build skipped)
+    if: always() && needs.resolve.result == 'success' && needs.resolve.outputs.deploy == 'true' && (needs.build.result == 'success' || (needs.build.result == 'skipped' && needs.resolve.outputs.rollback == 'true'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+          SHA: ${{ needs.resolve.outputs.sha }}
+          REPO: ${{ github.repository }}
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          script_stop: true
+          envs: GHCR_TOKEN,ACTOR,SHA,REPO
+          script: |
+            set -Eeuo pipefail
+
+            deploy_dir=/home/mlr/marvinlerouge.dev/website/compose
+
+            echo "==> Ensure deploy directory exists"
+            mkdir -p "$deploy_dir"
+
+            echo "==> Fetch docker-compose.prod.yml (commit: ${SHA})"
+            curl -fsSL \
+              "https://raw.githubusercontent.com/${REPO}/${SHA}/docker-compose.prod.yml" \
+              -o "$deploy_dir/docker-compose.prod.yml"
+
+            cd "$deploy_dir"
+
+            echo "==> Authenticate with GHCR"
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
+
+            echo "==> Pull image ${SHA}"
+            IMAGE_TAG="$SHA" docker compose -f docker-compose.prod.yml pull
+            docker logout ghcr.io
+
+            echo "==> Start the site and wait for it to be healthy"
+            IMAGE_TAG="$SHA" docker compose -f docker-compose.prod.yml up -d --remove-orphans --wait --wait-timeout 60
+
+            echo "==> Stack status"
+            IMAGE_TAG="$SHA" docker compose -f docker-compose.prod.yml ps
+
+  verify:
+    name: Verify production
+    needs: [resolve, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      # /version.txt holds the commit the image was built from: proves the traffic reaches the new release
+      - name: Check https://marvinlerouge.dev
+        env:
+          SHA: ${{ needs.resolve.outputs.sha }}
+        run: |
+          site=https://marvinlerouge.dev
+          for attempt in $(seq 1 12); do
+            served="$(curl -fsS --max-time 10 "$site/version.txt" || true)"
+            if [ "$served" = "$SHA" ]; then
+              home="$(curl -sS --max-time 10 -o /dev/null -D - -w 'status=%{http_code}\n' "$site/")"
+              grep -q '^status=200$' <<<"$home" || { echo "Homepage did not answer 200" >&2; exit 1; }
+              grep -qi '^content-security-policy:' <<<"$home" || { echo "Homepage has no CSP header" >&2; exit 1; }
+              not_found="$(curl -sS --max-time 10 -o /dev/null -w '%{http_code}' "$site/deploy-check-missing-page/")"
+              [ "$not_found" = 404 ] || { echo "Unknown path answered $not_found, expected 404" >&2; exit 1; }
+              echo "Production serves $SHA (attempt $attempt)"
+              exit 0
+            fi
+            echo "Attempt $attempt: serving '${served:-nothing}', expected $SHA, retrying"
+            sleep 5
+          done
+          echo "Production did not serve $SHA in time" >&2
+          exit 1

@@ -12,6 +12,9 @@ services:
       - 'traefik.enable=true'
       - 'traefik.docker.network=traefik-public'
       - 'traefik.http.routers.website.rule=Host(`marvinlerouge.dev`)'
+      # Default priority is the rule length (25 here): 26 wins over the legacy "homepage" router (same rule)
+      # while both run, without shadowing longer rules such as path-based routers on this host
+      - 'traefik.http.routers.website.priority=26'
       - 'traefik.http.routers.website.entrypoints=websecure'
       - 'traefik.http.routers.website.tls=true'
       - 'traefik.http.routers.website.tls.certresolver=letsencrypt'
