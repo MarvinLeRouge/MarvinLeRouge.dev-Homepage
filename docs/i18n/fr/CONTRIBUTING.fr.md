@@ -30,7 +30,7 @@ npm run dev
 | `npm run format:check` | Prettier                                                                                 |
 | `npm run check`        | Diagnostics Astro et TypeScript                                                          |
 | `npm run build`        | Build statique dans `dist/`                                                              |
-| `npm run test:cov`     | Tests unitaires Vitest, barrière de couverture de 80 % sur `src/scripts/`                |
+| `npm run test:cov`     | Tests unitaires Vitest, barrière de couverture de 80 % sur `src/scripts/` et `src/i18n/` |
 | `npm run test:e2e`     | Playwright et axe (WCAG 2.2 A et AA) sur le site construit, lancer `npm run build` avant |
 
 Le hook pre-commit lance ESLint et Prettier sur les fichiers indexés, `astro check`, et un scan gitleaks des modifications indexées. Le hook post-commit régénère `CHANGELOG.md` avec git-cliff.

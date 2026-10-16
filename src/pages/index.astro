@@ -1,56 +1,9 @@
 ---
+import Home from '../components/Home.astro';
+import { HOME_PATHS } from '../i18n/locales';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="MarvinLeRouge.dev">
-  <div class="container">
-    <div class="hazard-border">
-      <div class="corner tl"></div>
-      <div class="corner tr"></div>
-      <div class="corner bl"></div>
-      <div class="corner br"></div>
-
-      <div class="warning-tape">
-        <span class="warning-sign">⚠</span> &nbsp; AUTHORIZED PERSONNEL ONLY &nbsp;{' '}
-        <span class="warning-sign">⚠</span>
-      </div>
-
-      <span class="biohazard-icon">☣</span>
-
-      <div class="identity">
-        <div class="avatar-wrapper">
-          <span class="avatar-placeholder">?</span>
-        </div>
-        <h1>
-          <span class="marvin">Marvin</span>&#8203;<span class="le">Le</span>&#8203;
-          <span class="rouge">Rouge</span>
-        </h1>
-      </div>
-
-      <p class="subtitle">
-        <span>Fullstack developer</span>
-        <span>Experimental zone</span>
-      </p>
-
-      <div class="warning-box">
-        <span class="label">// WARNING</span>
-        You have entered a <em>live development environment</em>.<br />
-        Side effects may include: <em>working&nbsp;software</em>, <em>clean&nbsp;architecture</em>,
-        <em>automated&nbsp;tests</em>, and an unhealthy obsession with <em>code&nbsp;quality</em>.
-        <br />
-        Proceed at your own risk<span class="blink">_</span>
-      </div>
-
-      <div class="links">
-        <a href="https://github.com/MarvinLeRouge" target="_blank">
-          → GitHub
-        </a>
-      </div>
-
-      <p class="footer">
-        marvinlerouge.dev &nbsp;·&nbsp; no humans were harmed in the making of this page
-        &nbsp;.&nbsp; no <del>remains</del> dead code found.
-      </p>
-    </div>
-  </div>
+<BaseLayout title="MarvinLeRouge.dev" locale="fr" translations={HOME_PATHS}>
+  <Home locale="fr" />
 </BaseLayout>

@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '../assets/images/avatar.png';
+import type { Locale } from '../i18n/locales';
+import { UI } from '../i18n/ui';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import RichText from './RichText.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = UI[locale].home;
+---
+
+<div class="container">
+  <div class="hazard-border">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <LanguageSwitcher locale={locale} />
+
+    <div class="warning-tape">
+      <span class="warning-sign">⚠</span> &nbsp; {t.warningTape} &nbsp;{' '}
+      <span class="warning-sign">⚠</span>
+    </div>
+
+    <span class="biohazard-icon">☣</span>
+
+    <div class="identity">
+      <div class="avatar-wrapper">
+        <Image src={avatar} alt="" width={72} height={72} densities={[1, 2]} loading="eager" />
+      </div>
+      <h1>
+        <span class="marvin">Marvin</span>&#8203;<span class="le">Le</span>&#8203;
+        <span class="rouge">Rouge</span>
+      </h1>
+    </div>
+
+    <p class="subtitle">
+      <span>{t.jobTitle}</span>
+      <span>{t.zone}</span>
+    </p>
+
+    <p class="pitch">
+      <RichText text={t.pitch} />
+    </p>
+
+    <div class="warning-box">
+      <span class="label">{t.warningLabel}</span>
+      <RichText text={t.warningIntro} />
+      <br />
+      <span class="effects">
+        <RichText text={t.warningEffects} />
+      </span>
+      <br />
+      <span class="prompt">{t.warningOutro}</span>
+    </div>
+
+    <div class="links">
+      <a href="https://github.com/MarvinLeRouge" target="_blank">
+        → {t.githubLink}
+      </a>
+    </div>
+
+    <p class="footer">
+      {t.footerSite} &nbsp;·&nbsp; {t.footerHarm}
+      &nbsp;·&nbsp; {t.footerDeadCodeBefore} <del>{t.footerDeadCodeStruck}</del>
+      {t.footerDeadCodeAfter}
+    </p>
+  </div>
+</div>

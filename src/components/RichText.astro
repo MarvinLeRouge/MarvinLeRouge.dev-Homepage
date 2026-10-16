@@ -1,0 +1,19 @@
+---
+import type { RichText } from '../i18n/ui';
+
+interface Props {
+  text: RichText;
+}
+
+const { text } = Astro.props;
+---
+
+{text.map((part) =>
+  typeof part === 'string' ? (
+    part
+  ) : 'strong' in part ? (
+    <strong>{part.strong}</strong>
+  ) : (
+    <em>{part.em}</em>
+  ),
+)}

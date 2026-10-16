@@ -1,0 +1,9 @@
+---
+import Home from '../../components/Home.astro';
+import { HOME_PATHS } from '../../i18n/locales';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="MarvinLeRouge.dev" locale="en" translations={HOME_PATHS}>
+  <Home locale="en" />
+</BaseLayout>
