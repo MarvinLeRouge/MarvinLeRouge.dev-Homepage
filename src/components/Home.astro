@@ -1,8 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import avatar from '../assets/images/avatar.png';
+import { CIVIL_NAME, GITHUB_URL, LINKEDIN_URL } from '../i18n/identity';
 import type { Locale } from '../i18n/locales';
 import { UI } from '../i18n/ui';
+import EmailLink from './EmailLink.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import RichText from './RichText.astro';
 
@@ -34,10 +36,13 @@ const t = UI[locale].home;
       <div class="avatar-wrapper">
         <Image src={avatar} alt="" width={72} height={72} densities={[1, 2]} loading="eager" />
       </div>
-      <h1>
-        <span class="marvin">Marvin</span>&#8203;<span class="le">Le</span>&#8203;
-        <span class="rouge">Rouge</span>
-      </h1>
+      <div>
+        <h1>
+          <span class="marvin">Marvin</span>&#8203;<span class="le">Le</span>&#8203;
+          <span class="rouge">Rouge</span>
+        </h1>
+        <p class="civil-name">{CIVIL_NAME}</p>
+      </div>
     </div>
 
     <p class="subtitle">
@@ -61,10 +66,11 @@ const t = UI[locale].home;
     </div>
 
     <div class="links">
-      <a href="https://github.com/MarvinLeRouge" target="_blank">
-        → {t.githubLink}
-      </a>
+      <a href={GITHUB_URL}>→ {t.githubLink}</a>
+      <a href={LINKEDIN_URL}>→ {t.linkedinLink}</a>
     </div>
+
+    <EmailLink locale={locale} />
 
     <p class="footer">
       {t.footerSite} &nbsp;·&nbsp; {t.footerHarm}

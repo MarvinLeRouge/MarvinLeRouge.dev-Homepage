@@ -20,6 +20,7 @@
 The site complements the GitHub profile: GitHub shows the code, the site explains the reasoning behind it (design decisions, difficulties, case studies).
 
 - Fully static output: plain HTML and CSS, no client-side JavaScript beyond small progressive enhancements.
+- The contact address never appears in plain text in the HTML: a small script reveals it, with a spelled-out fallback without JavaScript.
 - French first at the root, English under `/en/`. The language picked with the switcher is remembered in the browser (`localStorage`, no cookie).
 - No audience measurement.
 - Accessibility is a design constraint, not an afterthought.
@@ -78,10 +79,10 @@ PLAYWRIGHT_BASE_URL=http://website-prod.marvinlerouge.local npm run test:e2e   #
 src/
   assets/      self-hosted fonts and avatar, font licenses
   components/  reusable page sections
-  i18n/        locales and every user-facing string (FR, EN)
+  i18n/        locales, identity links and every user-facing string (FR, EN)
   layouts/     page layouts (document head, shared structure)
   pages/       one file per route
-  scripts/     client scripts (language preference)
+  scripts/     client scripts (language preference, email reveal)
   styles/      global stylesheets
 tests/
   e2e/         Playwright and axe tests on the built site

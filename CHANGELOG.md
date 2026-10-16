@@ -17,6 +17,7 @@ automatically from Conventional Commits history.
 ### Features
 
 - Add french and english homepages with remembered language choice
+- Add civil name, linkedin link and spam-protected contact email
 
 ### Miscellaneous
 

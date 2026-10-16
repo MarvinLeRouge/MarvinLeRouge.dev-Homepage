@@ -1,3 +1,4 @@
+import type { SpelledOutWords } from '../scripts/email-reveal';
 import type { Locale } from './locales';
 
 /** Text with inline emphasis, rendered by the RichText component. */
@@ -13,6 +14,11 @@ interface HomeStrings {
   readonly warningEffects: RichText;
   readonly warningOutro: string;
   readonly githubLink: string;
+  readonly linkedinLink: string;
+  /** Text introducing the contact address. */
+  readonly emailPrefix: string;
+  /** Separator words of the address shown when JavaScript is off. */
+  readonly emailWords: SpelledOutWords;
   readonly footerSite: string;
   readonly footerHarm: string;
   readonly footerDeadCodeBefore: string;
@@ -66,6 +72,9 @@ export const UI: Readonly<Record<Locale, UiStrings>> = {
       ],
       warningOutro: 'Poursuivez à vos risques et périls',
       githubLink: 'GitHub',
+      linkedinLink: 'LinkedIn',
+      emailPrefix: 'Écrivez-moi :',
+      emailWords: { at: 'arobase', dot: 'point' },
       footerSite: 'marvinlerouge.dev',
       footerHarm: "aucun humain n'a été maltraité pendant la fabrication de cette page",
       footerDeadCodeBefore: 'aucun',
@@ -105,6 +114,9 @@ export const UI: Readonly<Record<Locale, UiStrings>> = {
       ],
       warningOutro: 'Proceed at your own risk',
       githubLink: 'GitHub',
+      linkedinLink: 'LinkedIn',
+      emailPrefix: 'Write to me:',
+      emailWords: { at: 'at', dot: 'dot' },
       footerSite: 'marvinlerouge.dev',
       footerHarm: 'no humans were harmed in the making of this page',
       footerDeadCodeBefore: 'no',

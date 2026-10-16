@@ -19,7 +19,7 @@
 ## Section 3 - Page d'accueil
 
 - [x] FEAT-001 - Ajouter le routage FR/EN, page d'accueil en français d'abord
-- [ ] FEAT-002 - Ajouter l'identité, les liens et l'email protégé contre le spam
+- [x] FEAT-002 - Ajouter l'identité, les liens et l'email protégé contre le spam
 - [ ] FEAT-003 - Ajouter les balises meta, Open Graph, le sitemap et robots
 
 ## Section 4 - Fiches projet
@@ -41,3 +41,4 @@
 
 - [ ] FEAT-013 - Ajouter les études de cas
 - [ ] FEAT-014 - Ajouter la page qualité du portfolio et le badge
+- [ ] FEAT-015 - Ajouter le CV téléchargeable
