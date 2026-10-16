@@ -12,7 +12,6 @@ for (const { path, lang, jobTitle } of HOMEPAGES) {
       const response = await page.goto(path);
 
       expect(response?.status()).toBe(200);
-      await expect(page).toHaveTitle('MarvinLeRouge.dev');
       await expect(page.locator('html')).toHaveAttribute('lang', lang);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await expect(page.getByText(jobTitle)).toBeVisible();

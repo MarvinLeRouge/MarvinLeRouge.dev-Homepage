@@ -1,0 +1,25 @@
+---
+import { CIVIL_NAME, GITHUB_URL, LINKEDIN_URL, PSEUDONYM } from '../i18n/identity';
+import { homePath, type Locale } from '../i18n/locales';
+import { UI } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: CIVIL_NAME,
+  alternateName: PSEUDONYM,
+  jobTitle: UI[locale].home.jobTitle,
+  url: new URL(homePath(locale), Astro.site).href,
+  sameAs: [GITHUB_URL, LINKEDIN_URL],
+};
+// Escaped so no string can close the script element early.
+const json = JSON.stringify(person).replaceAll('<', '\\u003c');
+---
+
+<!-- Data block, never executed: not subject to the script-src policy. -->
+<script is:inline type="application/ld+json" set:html={json} />
