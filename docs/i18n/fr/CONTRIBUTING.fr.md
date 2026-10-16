@@ -18,19 +18,24 @@ Ce dépôt contient les sources d'un site personnel. Les signalements et correct
 git clone https://github.com/MarvinLeRouge/MarvinLeRouge.dev-Website.git
 cd MarvinLeRouge.dev-Website
 npm install      # installe aussi les hooks git Husky
+npx playwright install chromium   # navigateur des tests de bout en bout, une seule fois
 npm run dev
 ```
 
 ## Contrôles qualité
 
-| Commande               | Rôle                                |
-| ---------------------- | ----------------------------------- |
-| `npm run lint`         | ESLint (règles TypeScript et Astro) |
-| `npm run format:check` | Prettier                            |
-| `npm run check`        | Diagnostics Astro et TypeScript     |
-| `npm run build`        | Build statique dans `dist/`         |
+| Commande               | Rôle                                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| `npm run lint`         | ESLint (règles TypeScript et Astro)                                                      |
+| `npm run format:check` | Prettier                                                                                 |
+| `npm run check`        | Diagnostics Astro et TypeScript                                                          |
+| `npm run build`        | Build statique dans `dist/`                                                              |
+| `npm run test:cov`     | Tests unitaires Vitest, barrière de couverture de 80 % sur `src/scripts/`                |
+| `npm run test:e2e`     | Playwright et axe (WCAG 2.2 A et AA) sur le site construit, lancer `npm run build` avant |
 
 Le hook pre-commit lance ESLint et Prettier sur les fichiers indexés, `astro check`, et un scan gitleaks des modifications indexées. Le hook post-commit régénère `CHANGELOG.md` avec git-cliff.
+
+La CI exécute tous ces contrôles sur chaque pull request, ainsi qu'une vérification des liens internes de `dist/` (lychee) et `npm audit`. Le job `CI status` agrège les résultats : c'est le contrôle obligatoire sur `main`.
 
 ## Processus
 

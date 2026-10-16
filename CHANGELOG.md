@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file, generated
 automatically from Conventional Commits history.
 ## [Unreleased]
 
+### CI/CD
+
+- Add ci with tests, accessibility and link checks
+
 ### Miscellaneous
 
 - Gitignore
