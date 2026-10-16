@@ -1,0 +1,52 @@
+# Local development behind the local Traefik (network traefik-public, entrypoint web).
+# Hosts to add to /etc/hosts: website.marvinlerouge.local, website-prod.marvinlerouge.local
+name: website-dev
+
+services:
+  # Astro dev server with hot reload: docker compose up
+  website:
+    build:
+      context: .
+      target: dev
+    command:
+      [
+        'npm',
+        'run',
+        'dev',
+        '--',
+        '--host',
+        '0.0.0.0',
+        '--allowed-hosts',
+        'website.marvinlerouge.local',
+      ]
+    # Only sources are mounted: after a change to package.json, tsconfig or public/, rebuild with --build.
+    volumes:
+      - ./src:/app/src
+      - ./astro.config.mjs:/app/astro.config.mjs:ro
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik-public'
+      - 'traefik.http.routers.website-dev.rule=Host(`website.marvinlerouge.local`)'
+      - 'traefik.http.routers.website-dev.entrypoints=web'
+      - 'traefik.http.services.website-dev.loadbalancer.server.port=4321'
+    networks:
+      - traefik-public
+
+  # Production image (Nginx, real headers and caching): docker compose --profile prod up --build
+  website-prod:
+    profiles: ['prod']
+    build:
+      context: .
+      target: production
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik-public'
+      - 'traefik.http.routers.website-prod-local.rule=Host(`website-prod.marvinlerouge.local`)'
+      - 'traefik.http.routers.website-prod-local.entrypoints=web'
+      - 'traefik.http.services.website-prod-local.loadbalancer.server.port=80'
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true

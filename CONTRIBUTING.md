@@ -35,7 +35,7 @@ npm run dev
 
 The pre-commit hook runs ESLint and Prettier on staged files, `astro check`, and a gitleaks scan of the staged changes. The post-commit hook regenerates `CHANGELOG.md` with git-cliff.
 
-The CI runs all of the above on every pull request, plus an internal link check of `dist/` (lychee) and `npm audit`. The `CI status` job aggregates the results and is the required check on `main`.
+The CI runs all of the above on every pull request, plus an internal link check of `dist/` (lychee), `npm audit`, and a build and smoke test of the production Docker image (`scripts/smoke-docker.sh`). The `CI status` job aggregates the results and is the required check on `main`.
 
 ## Workflow
 

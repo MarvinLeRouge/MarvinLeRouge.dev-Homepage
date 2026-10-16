@@ -12,7 +12,7 @@
 
 ## Section 2 - Déploiement
 
-- [ ] CHORE-003 - Conteneuriser le site (Dockerfile, nginx, fichiers compose)
+- [x] CHORE-003 - Conteneuriser le site (Dockerfile, nginx, fichiers compose)
 - [ ] CI-002 - Ajouter le workflow Build & Deploy, le guide d'exploitation et la bascule du VPS
 - [ ] FIX-001 - Rediriger www.marvinlerouge.dev vers le domaine principal
 

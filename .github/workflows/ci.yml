@@ -157,10 +157,30 @@ jobs:
       - name: npm audit (dependency vulnerability scan)
         run: npm audit --audit-level=critical
 
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Build production image
+        run: docker build --target production -t website:ci .
+      - name: Start container
+        run: |
+          docker run -d --name website -p 8080:80 website:ci
+          for _ in $(seq 1 30); do
+            [ "$(docker inspect -f '{{.State.Health.Status}}' website)" = healthy ] && exit 0
+            sleep 1
+          done
+          docker logs website
+          exit 1
+      - name: Smoke test (status codes, headers, caching)
+        run: scripts/smoke-docker.sh http://localhost:8080
+
   ci-status:
     name: CI status
     if: always()
-    needs: [lint, test, build, e2e, links, security]
+    needs: [lint, test, build, e2e, links, security, docker]
     runs-on: ubuntu-latest
     steps:
       # Skipped counts as a failure: a job skipped by a future condition must not pass the gate silently.

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 | MarvinLeRouge.dev">
+  <div class="container">
+    <div class="hazard-border">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div class="warning-tape">
+        <span class="warning-sign">⚠</span> &nbsp; RESTRICTED AREA &nbsp;{' '}
+        <span class="warning-sign">⚠</span>
+      </div>
+
+      <h1>
+        <span class="rouge">404</span>
+      </h1>
+
+      <p class="subtitle">
+        <span>Sector not found</span>
+      </p>
+
+      <div class="warning-box">
+        <span class="label">// ERROR</span>
+        The page you requested does not exist,
+        <br />
+        or has been moved to a safer containment zone<span class="blink">_</span>
+      </div>
+
+      <div class="links">
+        <a href="/">→ Back to base</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

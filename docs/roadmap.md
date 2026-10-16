@@ -12,7 +12,7 @@
 
 ## Section 2 - Deployment
 
-- [ ] CHORE-003 - Containerize the site (Dockerfile, nginx, compose files)
+- [x] CHORE-003 - Containerize the site (Dockerfile, nginx, compose files)
 - [ ] CI-002 - Add the Build & Deploy workflow, operations runbook and VPS cutover
 - [ ] FIX-001 - Redirect www.marvinlerouge.dev to the apex domain
 
