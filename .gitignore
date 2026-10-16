@@ -1,1 +1,7 @@
 docs/work-in-progress
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+.serena/
