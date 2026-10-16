@@ -27,4 +27,8 @@ automatically from Conventional Commits history.
 - Add linting, formatting, git hooks and community docs
 - Containerize the site with nginx and self-hosted fonts
 
+### Testing
+
+- Enforce writing rules and identity data with unit tests
+
 
