@@ -7,7 +7,7 @@
 ## Section 1 - Foundation
 
 - [x] CHORE-001 - Bootstrap Astro and port the current homepage with identical rendering
-- [ ] CHORE-002 - Add tooling, documentation and repository hygiene
+- [x] CHORE-002 - Add tooling, documentation and repository hygiene
 - [ ] CI-001 - Add the CI workflow
 
 ## Section 2 - Deployment

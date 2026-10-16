@@ -2,22 +2,73 @@
 
 ---
 
-# MarvinLeRouge.dev-Website
+# 🌐 MarvinLeRouge.dev-Website
 
-Source of [marvinlerouge.dev](https://marvinlerouge.dev), a static site built with [Astro](https://astro.build).
+> _Source of [marvinlerouge.dev](https://marvinlerouge.dev): personal site of a backend developer / data engineer, with bilingual project sheets offering a recruiter view and a technical view. Static site built with Astro._
+
+[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![License](https://img.shields.io/github/license/MarvinLeRouge/MarvinLeRouge.dev-Website?cacheSeconds=3600)](LICENSE)
+
+---
+
+## About
+
+The site complements the GitHub profile: GitHub shows the code, the site explains the reasoning behind it (design decisions, difficulties, case studies).
+
+- Fully static output: plain HTML and CSS, no client-side JavaScript beyond small progressive enhancements.
+- No audience measurement.
+- Accessibility is a design constraint, not an afterthought.
+
+---
+
+## Tech stack
+
+| Layer      | Technology                                                                                                      |
+| ---------- | --------------------------------------------------------------------------------------------------------------- |
+| Generator  | ![Astro](https://img.shields.io/badge/Astro-BC52EE?logo=astro&logoColor=white&style=flat-square)                |
+| Language   | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square) |
+| Linting    | ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white&style=flat-square)             |
+| Formatting | ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black&style=flat-square)       |
+| Git hooks  | Husky, lint-staged, gitleaks, git-cliff                                                                         |
+
+---
 
 ## Development
 
-Requires Node.js 24 (see `.nvmrc`).
+Requires Node.js 24 (see `.nvmrc`) and gitleaks (see [CONTRIBUTING.md](CONTRIBUTING.md)).
 
 ```bash
-npm install
-npm run dev      # local dev server with hot reload
-npm run build    # static build into dist/
-npm run preview  # serve the built site locally
-npm run check    # Astro and TypeScript diagnostics
+npm install          # dependencies and git hooks
+npm run dev          # local dev server with hot reload
+npm run build        # static build into dist/
+npm run preview      # serve the built site locally
+npm run check        # Astro and TypeScript diagnostics
+npm run lint         # ESLint
+npm run format:check # Prettier
 ```
+
+---
+
+## Project structure
+
+```
+src/
+  layouts/   page layouts (document head, shared structure)
+  pages/     one file per route
+  styles/    global stylesheets
+docs/        roadmap and translated community files
+scripts/     git hook helpers
+```
+
+---
 
 ## Roadmap
 
 See [docs/roadmap.md](docs/roadmap.md).
+
+---
+
+## License
+
+The source code is released under the [MIT License](LICENSE). The site content (texts, project sheets, case studies, screenshots and images) is not covered by it: all rights reserved.

@@ -1,0 +1,1 @@
+bash scripts/changelog-post-commit.sh
